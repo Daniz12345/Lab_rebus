@@ -96,12 +96,8 @@ void comp_coef(void) {
 int check_sol(void) {
     long long sum = 0;
 
-    for (int k = 0; k < letter_count; k++) {
-        int d = digit_of[letters[k] - 'A'];
-        if (d == 0 && is_leading[k])
-            return 0;
-        sum += coef[k] * d;
-    }
+    for (int k = 0; k < letter_count; k++)
+        sum += coef[k] * digit_of[letters[k] - 'A'];
 
     return sum == 0;
 }
@@ -112,6 +108,8 @@ int search(int k) {
 
     for (int d = 0; d <= 9; d++) {
         if (used[d])
+            continue;
+        if (d == 0 && is_leading[k])
             continue;
 
         used[d] = 1;
