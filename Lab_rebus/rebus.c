@@ -94,12 +94,29 @@ void comp_coef(void) {
     }
 }
 
+long long abs_ll(long long x) {
+    return x >= 0 ? x : -x;
+}
+
+void sort_letters(void) {
+    for (int i = 0; i < letter_count - 1; i++) {
+        int best = i;
+        for (int j = i + 1; j < letter_count; j++) {
+            if (abs_ll(coef[j]) > abs_ll(coef[best]))
+                best = j;
+        }
+        if (best != i) {
+            char      tl = letters[i];    letters[i] = letters[best];    letters[best] = tl;
+            long long tc = coef[i];       coef[i] = coef[best];       coef[best] = tc;
+            int       tz = is_leading[i]; is_leading[i] = is_leading[best]; is_leading[best] = tz;
+        }
+    }
+}
+
 void comp_rest(void) {
     rest[letter_count] = 0;
-    for (int k = letter_count - 1; k >= 0; k--) {
-        long long a = coef[k] >= 0 ? coef[k] : -coef[k];
-        rest[k] = rest[k + 1] + 9 * a;
-    }
+    for (int k = letter_count - 1; k >= 0; k--)
+        rest[k] = rest[k + 1] + 9 * abs_ll(coef[k]);
 }
 
 int search(int k, long long sum) {
@@ -151,6 +168,7 @@ int solve_rebus(const char* rebus, char* result) {
     if (!collect_letters())
         return 0;
     comp_coef();
+    sort_letters();
     comp_rest();
 
     memset(used, 0, sizeof(used));
